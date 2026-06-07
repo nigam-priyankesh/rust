@@ -1,0 +1,20 @@
+[package]
+name = "untitled"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+env_logger = "0.11.10"
+log = "0.4.32"
+thiserror = "2.0.18"
+
+# Dev profile: full debug info + no optimization so breakpoints, variable
+# inspection and step-through work reliably in the RustRover debugger.
+[profile.dev]
+opt-level = 0
+debug = "full"
+
+# Keep debug symbols in release too (stripped to a separate PDB on MSVC) so
+# production crashes remain diagnosable without slowing the binary down.
+[profile.release]
+debug = "line-tables-only"
