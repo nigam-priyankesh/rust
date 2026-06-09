@@ -15,11 +15,15 @@
 //! Set breakpoints in `rank_by_combined_score` or `Employee::new` and launch the
 //! "Run" configuration in RustRover with the debugger (the bug icon).
 
+mod calculator;
+
 use std::cmp::Ordering;
 use std::fmt;
 
 use log::{debug, error, info, warn};
 use thiserror::Error;
+
+use calculator::Calculator;
 
 /// Relative importance of salary vs. age when computing the combined score.
 /// They do not need to sum to 1.0, but keeping them normalized makes the
@@ -41,6 +45,9 @@ enum RosterError {
 
     #[error("cannot rank an empty roster")]
     EmptyRoster,
+
+    #[error(transparent)]
+    Calc(#[from] calculator::CalcError),
 }
 
 /// A single employee. Construct via [`Employee::new`] so invariants are enforced.
@@ -182,6 +189,11 @@ fn build_sample_roster() -> Vec<Employee> {
 /// Real work lives here so `main` stays a thin shell that maps errors to a
 /// process exit code.
 fn run() -> Result<(), RosterError> {
+    let calc = Calculator::new();
+    let (a, b) = (7, 35);
+    let sum = calc.add(a, b).map_err(RosterError::Calc)?;
+    println!("{a} + {b} = {sum}");
+
     let roster = build_sample_roster();
     info!("loaded {} valid employee(s)", roster.len());
 
