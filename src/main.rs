@@ -1,19 +1,6 @@
 //! Employee roster: load employees, validate them, and rank them by a combined
 //! salary + age score.
 //!
-//! Production concerns addressed here:
-//!   * Structured logging via the `log` facade + `env_logger` backend.
-//!   * Explicit, typed error handling via `thiserror` (no `unwrap`/`panic` on
-//!     recoverable paths).
-//!   * Input validation at construction time so invalid state is unrepresentable.
-//!
-//! Run with logging:
-//!   PowerShell:  $env:RUST_LOG="debug"; cargo run
-//!   bash:        RUST_LOG=debug cargo run
-//!
-//! Debugging: build in the (default) dev profile, which carries full debug info.
-//! Set breakpoints in `rank_by_combined_score` or `Employee::new` and launch the
-//! "Run" configuration in RustRover with the debugger (the bug icon).
 
 mod calculator;
 
@@ -25,16 +12,11 @@ use thiserror::Error;
 
 use calculator::Calculator;
 
-/// Relative importance of salary vs. age when computing the combined score.
-/// They do not need to sum to 1.0, but keeping them normalized makes the
-/// resulting score easy to reason about.
 const SALARY_WEIGHT: f64 = 0.7;
 const AGE_WEIGHT: f64 = 0.3;
 
-/// Sane upper bound used purely for sanity-checking input data.
 const MAX_PLAUSIBLE_AGE: u8 = 120;
 
-/// Errors that can arise while building or processing the employee roster.
 #[derive(Debug, Error)]
 enum RosterError {
     #[error("employee `{name}` has an invalid salary: {salary} (must be finite and >= 0)")]

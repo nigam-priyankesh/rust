@@ -1,5 +1,5 @@
 //! A tiny `Calculator` "class" (a struct with methods) used to demonstrate
-//! adding two numbers with the same production conventions as the rest of the
+//! adding two numbers
 //! crate: typed errors, logging, and unit tests.
 
 use log::debug;
