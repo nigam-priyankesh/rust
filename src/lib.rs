@@ -2,13 +2,6 @@
 //!
 //! This crate holds the reusable, testable logic. The binary (`main.rs`) is a
 //! thin shell that loads sample data, wires up logging, and prints results.
-//!
-//! Test layout (Rust convention):
-//!   * Unit tests for *private* helpers (e.g. `normalize`) live inline in a
-//!     `#[cfg(test)] mod tests` block here, since external crates can't see
-//!     private items.
-//!   * Integration tests for the *public* API live in the top-level `tests/`
-//!     directory, where each file is compiled as its own separate crate.
 
 pub mod calculator;
 
@@ -20,16 +13,11 @@ use thiserror::Error;
 
 pub use calculator::{CalcError, Calculator};
 
-/// Relative importance of salary vs. age when computing the combined score.
-/// They do not need to sum to 1.0, but keeping them normalized makes the
-/// resulting score easy to reason about.
 const SALARY_WEIGHT: f64 = 0.7;
 const AGE_WEIGHT: f64 = 0.3;
 
-/// Sane upper bound used purely for sanity-checking input data.
 const MAX_PLAUSIBLE_AGE: u8 = 120;
 
-/// Errors that can arise while building or processing the employee roster.
 #[derive(Debug, Error)]
 pub enum RosterError {
     #[error("employee `{name}` has an invalid salary: {salary} (must be finite and >= 0)")]
